@@ -1,0 +1,51 @@
+Descrição Técnica do Código main.tf
+
+O código main.tf provê uma infraestrutura básica na AWS usando o Terraform, dividida em vários recursos. Aqui está o que cada parte do código faz:
+
+Provider AWS:
+
+Define o provider AWS, configurando a região como us-east-1, que será usada para criar todos os recursos na AWS.
+Variáveis:
+
+variable "projeto" e variable "candidato": Essas variáveis são utilizadas para dar nomes personalizados aos recursos criados, baseados no nome do projeto e do candidato. A variável projeto tem o valor padrão "VExpenses" e a variável candidato pode ser ajustada para o nome do usuário.
+Chave Privada e Par de Chaves:
+
+tls_private_key.ec2_key: Gera uma chave privada RSA de 2048 bits, que será usada para criar um par de chaves SSH.
+aws_key_pair.ec2_key_pair: Cria um par de chaves SSH no AWS, usando a chave pública gerada pelo tls_private_key, para acesso à instância EC2.
+VPC (Virtual Private Cloud):
+
+aws_vpc.main_vpc: Cria uma VPC com o bloco CIDR 10.0.0.0/16, habilitando suporte para DNS e resolução de hostnames, permitindo uma comunicação dentro da VPC.
+Subnet:
+
+aws_subnet.main_subnet: Cria uma subnet associada à VPC, com o bloco CIDR 10.0.1.0/24, localizada na zona de disponibilidade us-east-1a.
+Internet Gateway:
+
+aws_internet_gateway.main_igw: Cria um Internet Gateway, que permite que os recursos da VPC se conectem à internet.
+Tabela de Rotas e Associação:
+
+aws_route_table.main_route_table: Cria uma tabela de rotas para a VPC, permitindo o tráfego de saída para a internet através do Internet Gateway.
+aws_route_table_association.main_association: Associa a tabela de rotas à subnet, garantindo que o tráfego da subnet seja roteado para a internet.
+Grupo de Segurança:
+
+aws_security_group.main_sg: Cria um grupo de segurança que define as regras de tráfego de entrada e saída:
+Entrada (ingress): Permite SSH na porta 22 de qualquer IP (0.0.0.0/0).
+Saída (egress): Permite todo o tráfego de saída sem restrições.
+Imagem da Máquina (AMI):
+
+data.aws_ami.debian12: Localiza a imagem AMI mais recente do Debian 12, que será usada na instância EC2.
+Instância EC2:
+
+aws_instance.debian_ec2: Cria uma instância EC2 t2.micro utilizando a AMI do Debian 12, associada à subnet, key pair e grupo de segurança definidos. Também executa um script básico de atualização do sistema no startup (user_data).
+O disco da instância é configurado com um volume de 20 GB.
+Outputs:
+
+private_key: Exporta a chave privada gerada, necessária para acessar a instância via SSH.
+ec2_public_ip: Exporta o IP público da instância EC2, para que possa ser acessada externamente.
+Observações:
+Segurança:
+
+A regra de segurança permite acesso SSH de qualquer IP, o que é um risco. Uma boa prática seria restringir o acesso a IPs específicos.
+O uso de IPv6 (::/0) também abre portas para todo o tráfego de entrada, o que pode aumentar a vulnerabilidade.
+Automação:
+
+O script de inicialização (user_data) faz apenas a atualização e upgrade do sistema. Como parte do desafio, seria interessante adicionar a instalação do servidor Nginx e sua inicialização automática.

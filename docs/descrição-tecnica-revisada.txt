@@ -1,0 +1,41 @@
+
+Aqui está a descrição técnica revisada, agora incluindo a implementação da adição de tags para os recursos:
+
+Descrição Técnica das Melhorias e Resultados Esperados
+1. Melhorias de Segurança:
+Para aumentar a segurança do ambiente criado, foram implementadas as seguintes alterações:
+
+Regras de Segurança Ajustadas:
+As regras do grupo de segurança foram modificadas para permitir o acesso SSH apenas a partir de um IP específico, substituindo 0.0.0.0/0 por um IP específico na linha cidr_blocks. Isso reduz a superfície de ataque da instância EC2, limitando o acesso apenas a endereços IP autorizados.
+2. Automação da Instalação do Nginx:
+A instância EC2 foi configurada para instalar e iniciar automaticamente o servidor Nginx após a criação. A configuração do user_data inclui:
+
+Script de Inicialização:
+Um script bash que executa os comandos apt-get update, apt-get upgrade e apt-get install nginx -y, seguido por systemctl start nginx e systemctl enable nginx. Isso garante que o Nginx seja instalado e iniciado automaticamente assim que a instância estiver disponível.
+3. Adição de Tags Consistentes:
+Para facilitar o gerenciamento e a organização da infraestrutura, foi implementada uma estratégia de tagging consistente em todos os recursos criados. As tags são pares chave-valor que ajudam a categorizar e identificar recursos, e foram adicionadas da seguinte maneira:
+
+Tags Implementadas:
+Foram adicionadas as chaves Owner, Project e Environment em cada recurso, permitindo que os recursos sejam facilmente filtrados e identificados no console da AWS. Isso contribui para práticas de governança, segurança e faturamento, permitindo melhor rastreamento de custos e responsabilidades.
+Resultados Esperados:
+Melhor Segurança:
+
+As alterações nas regras de segurança limitam o acesso SSH apenas a endereços IP autorizados, reduzindo a exposição da instância a ataques externos.
+Facilidade de Uso do Nginx:
+
+A automação da instalação do Nginx proporciona um ambiente de desenvolvimento mais rápido e eficiente, eliminando a necessidade de configuração manual após a criação da instância.
+Melhor Gerenciamento:
+
+A implementação de tags consistentes permite que os recursos sejam filtrados facilmente no console da AWS, facilitando o gerenciamento e a auditoria da infraestrutura.
+Controle de Custos:
+
+A categorização dos recursos através das tags possibilita um melhor controle dos custos, permitindo o uso do AWS Cost Explorer para identificar e otimizar gastos.
+Aprimoramento na Governança:
+
+Tags padronizadas melhoram a governança da infraestrutura, ajudando a manter o controle sobre a responsabilidade por cada recurso e o ambiente em que cada um opera.
+Facilidade de Auditoria:
+
+Durante auditorias, a presença de tags facilita a verificação de conformidade e a identificação de recursos que possam precisar de atenção.
+
+Conclusão:
+As melhorias implementadas no código Terraform não apenas aumentam a segurança do ambiente, mas também melhoram a eficiência na automação da instalação de serviços e a organização dos recursos através de tagging. Essas práticas se alinham com as melhores práticas da AWS e contribuem para uma abordagem mais organizada e segura na gestão da infraestrutura em nuvem.
